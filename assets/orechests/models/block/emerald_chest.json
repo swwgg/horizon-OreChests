@@ -1,0 +1,6 @@
+{
+  "parent": "orechests:block/chest_template",
+  "textures": {
+    "particle": "minecraft:block/emerald_block"
+  }
+}

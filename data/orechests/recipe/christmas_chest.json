@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    " B ",
+    "RCY",
+    " S "
+  ],
+  "key": {
+    "C": "minecraft:chest",
+    "Y": "minecraft:yellow_dye",
+    "R": "minecraft:red_dye",
+    "B": "minecraft:sweet_berries",
+    "S": "minecraft:spruce_sapling"
+  },
+  "result": {
+    "id": "orechests:christmas_chest",
+    "count": 1
+  }
+}
