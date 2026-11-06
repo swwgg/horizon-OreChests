@@ -1,14 +1,13 @@
 {
   "type": "minecraft:crafting_shaped",
   "pattern": [
-    "GGG",
-    "DSD",
-    "GGG"
+    "DDD",
+    "DGD",
+    "DDD"
   ],
   "key": {
     "D": "minecraft:diamond",
-    "S": "minecraft:gold_ingot",
-    "G": "minecraft:glass"
+    "G": "minecraft:gold_ingot"
   },
   "result": {
     "id": "orechests:diamond_upgrade",

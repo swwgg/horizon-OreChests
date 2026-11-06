@@ -1,14 +1,13 @@
 {
   "type": "minecraft:crafting_shaped",
   "pattern": [
-    "MGM",
-    "GSG",
-    "MGM"
+    "III",
+    "ICI",
+    "III"
   ],
   "key": {
-    "M": "minecraft:iron_ingot",
-    "S": "#orechests:copper_chests",
-    "G": "minecraft:glass"
+    "I": "minecraft:iron_ingot",
+    "C": "orechests:copper_chest"
   },
   "result": {
     "id": "orechests:iron_chest",

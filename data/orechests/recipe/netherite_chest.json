@@ -1,8 +1,9 @@
 {
-  "type": "minecraft:smithing_transform",
-  "template": "minecraft:netherite_upgrade_smithing_template",
-  "base": "#orechests:diamond_emerald_obsidian_chests",
-  "addition": "minecraft:netherite_ingot",
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    "orechests:obsidian_chest",
+    "minecraft:netherite_ingot"
+  ],
   "result": {
     "id": "orechests:netherite_chest",
     "count": 1

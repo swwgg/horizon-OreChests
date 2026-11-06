@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "EEE",
+    "ECE",
+    "EEE"
+  ],
+  "key": {
+    "E": "minecraft:emerald",
+    "C": "orechests:diamond_chest"
+  },
+  "result": {
+    "id": "orechests:emerald_chest",
+    "count": 1
+  }
+}

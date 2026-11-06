@@ -1,12 +1,12 @@
 {
   "type": "minecraft:crafting_shaped",
   "pattern": [
-    "iii",
-    "iCi",
-    "iii"
+    "GGG",
+    "GCG",
+    "GGG"
   ],
   "key": {
-    "i": "minecraft:gold_ingot",
+    "G": "minecraft:gold_ingot",
     "C": "orechests:iron_chest"
   },
   "result": {

@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "GGG",
+    "GDG",
+    "GGG"
+  ],
+  "key": {
+    "G": "minecraft:glass",
+    "D": "minecraft:diamond"
+  },
+  "result": {
+    "id": "orechests:crystal_upgrade",
+    "count": 1
+  }
+}

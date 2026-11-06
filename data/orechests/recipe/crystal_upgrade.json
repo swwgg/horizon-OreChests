@@ -1,13 +1,13 @@
 {
   "type": "minecraft:crafting_shaped",
   "pattern": [
-    "ggg",
-    "lgl",
-    "ggg"
+    "GGG",
+    "GDG",
+    "GGG"
   ],
   "key": {
-    "g": "minecraft:glass",
-    "l": "minecraft:lapis_lazuli"
+    "G": "minecraft:glass",
+    "D": "minecraft:diamond"
   },
   "result": {
     "id": "orechests:crystal_upgrade",

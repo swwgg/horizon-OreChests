@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "III",
+    "ICI",
+    "III"
+  ],
+  "key": {
+    "I": "minecraft:iron_ingot",
+    "C": "orechests:copper_chest"
+  },
+  "result": {
+    "id": "orechests:iron_chest",
+    "count": 1
+  }
+}

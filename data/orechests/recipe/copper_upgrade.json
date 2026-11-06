@@ -7,7 +7,7 @@
   ],
   "key": {
     "C": "minecraft:copper_ingot",
-    "P": "#minecraft:planks"
+    "P": "minecraft:oak_planks"
   },
   "result": {
     "id": "orechests:copper_upgrade",

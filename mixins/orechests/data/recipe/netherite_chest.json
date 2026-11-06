@@ -1,0 +1,11 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    "orechests:obsidian_chest",
+    "minecraft:netherite_ingot"
+  ],
+  "result": {
+    "id": "orechests:netherite_chest",
+    "count": 1
+  }
+}

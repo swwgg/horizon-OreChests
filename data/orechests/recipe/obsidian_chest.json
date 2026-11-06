@@ -1,13 +1,13 @@
 {
   "type": "minecraft:crafting_shaped",
   "pattern": [
-    "MMM",
-    "MSM",
-    "MMM"
+    "OOO",
+    "OCO",
+    "OOO"
   ],
   "key": {
-    "M": "minecraft:obsidian",
-    "S": "#orechests:diamond_emerald_chests"
+    "O": "minecraft:obsidian",
+    "C": "orechests:diamond_chest"
   },
   "result": {
     "id": "orechests:obsidian_chest",

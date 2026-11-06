@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "  S",
+    "  S",
+    "IIC"
+  ],
+  "key": {
+    "S": "minecraft:stick",
+    "C": "minecraft:coal_block",
+    "I": "minecraft:iron_ingot"
+  },
+  "result": {
+    "id": "orechests:hand_truck",
+    "count": 1
+  }
+}

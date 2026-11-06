@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "OOO",
+    "ODO",
+    "OOO"
+  ],
+  "key": {
+    "O": "minecraft:obsidian",
+    "D": "minecraft:diamond"
+  },
+  "result": {
+    "id": "orechests:obsidian_upgrade",
+    "count": 1
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "GGG",
+    "DCD",
+    "GGG"
+  ],
+  "key": {
+    "G": "minecraft:glass",
+    "D": "minecraft:diamond",
+    "C": "orechests:gold_chest"
+  },
+  "result": {
+    "id": "orechests:diamond_chest",
+    "count": 1
+  }
+}

@@ -1,12 +1,12 @@
 {
   "type": "minecraft:crafting_shaped",
   "pattern": [
-    "  F",
-    "  F",
+    "  S",
+    "  S",
     "IIC"
   ],
   "key": {
-    "F": "#minecraft:fences",
+    "S": "minecraft:stick",
     "C": "minecraft:coal_block",
     "I": "minecraft:iron_ingot"
   },

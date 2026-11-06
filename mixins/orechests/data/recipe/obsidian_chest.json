@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "OOO",
+    "OCO",
+    "OOO"
+  ],
+  "key": {
+    "O": "minecraft:obsidian",
+    "C": "orechests:diamond_chest"
+  },
+  "result": {
+    "id": "orechests:obsidian_chest",
+    "count": 1
+  }
+}

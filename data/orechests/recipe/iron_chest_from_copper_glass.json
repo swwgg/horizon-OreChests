@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "MGM",
+    "GCG",
+    "MGM"
+  ],
+  "key": {
+    "M": "minecraft:iron_ingot",
+    "G": "minecraft:glass",
+    "C": "orechests:copper_chest"
+  },
+  "result": {
+    "id": "orechests:iron_chest",
+    "count": 1
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "GGG",
+    "GCG",
+    "GGG"
+  ],
+  "key": {
+    "G": "minecraft:glass",
+    "C": "orechests:emerald_chest"
+  },
+  "result": {
+    "id": "orechests:crystal_chest",
+    "count": 1
+  }
+}

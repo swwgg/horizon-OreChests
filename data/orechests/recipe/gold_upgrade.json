@@ -1,13 +1,13 @@
 {
   "type": "minecraft:crafting_shaped",
   "pattern": [
-    "MMM",
-    "MSM",
-    "MMM"
+    "GGG",
+    "GIG",
+    "GGG"
   ],
   "key": {
-    "M": "minecraft:gold_ingot",
-    "S": "minecraft:iron_ingot"
+    "G": "minecraft:gold_ingot",
+    "I": "minecraft:iron_ingot"
   },
   "result": {
     "id": "orechests:gold_upgrade",

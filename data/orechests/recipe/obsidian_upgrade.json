@@ -2,12 +2,12 @@
   "type": "minecraft:crafting_shaped",
   "pattern": [
     "OOO",
-    "OlO",
+    "ODO",
     "OOO"
   ],
   "key": {
     "O": "minecraft:obsidian",
-    "l": "minecraft:lapis_lazuli"
+    "D": "minecraft:diamond"
   },
   "result": {
     "id": "orechests:obsidian_upgrade",

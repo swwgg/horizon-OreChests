@@ -1,10 +1,11 @@
 {
   "type": "minecraft:crafting_shapeless",
   "ingredients": [
-    "#minecraft:copper_chests"
+    "orechests:diamond_chest",
+    "minecraft:netherite_ingot"
   ],
   "result": {
-    "id": "orechests:copper_chest",
+    "id": "orechests:netherite_chest",
     "count": 1
   }
 }
