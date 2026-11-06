@@ -7,7 +7,11 @@
   ],
   "key": {
     "d": "minecraft:dirt",
-    "C": "minecraft:chest"
+    "C": [
+      "minecraft:chest",
+      "minecraft:trapped_chest",
+      "minecraft:barrel"
+    ]
   },
   "result": {
     "id": "orechests:dirt_chest",

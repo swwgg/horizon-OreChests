@@ -7,7 +7,11 @@
   ],
   "key": {
     "C": "minecraft:copper_ingot",
-    "#": "minecraft:chest"
+    "#": [
+      "minecraft:chest",
+      "minecraft:trapped_chest",
+      "minecraft:barrel"
+    ]
   },
   "result": {
     "id": "orechests:copper_chest",

@@ -6,7 +6,11 @@
     " S "
   ],
   "key": {
-    "C": "minecraft:chest",
+    "C": [
+      "minecraft:chest",
+      "minecraft:trapped_chest",
+      "minecraft:barrel"
+    ],
     "Y": "minecraft:yellow_dye",
     "R": "minecraft:red_dye",
     "B": "minecraft:sweet_berries",

@@ -8,7 +8,10 @@
   "key": {
     "M": "minecraft:iron_ingot",
     "G": "minecraft:glass",
-    "C": "orechests:copper_chest"
+    "C": [
+      "orechests:copper_chest",
+      "minecraft:copper_chest"
+    ]
   },
   "result": {
     "id": "orechests:iron_chest",

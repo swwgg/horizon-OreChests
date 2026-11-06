@@ -100,3 +100,12 @@ bindings = [
   { name = "game", ty = "&mut crate::game::Game<'_>", value = "&mut *self" },
   { name = "phase", ty = "crate::game::native_lifecycle::ServerTickPhase", value = "phase" },
 ]
+
+[[injection]]
+id = "load_world_rest"
+kind = "HEAD"
+target = "horizon_client::game::load_world_rest"
+helper = "rest.rs"
+bindings = [
+  { name = "root", ty = "&std::path::Path", value = "root" },
+]

@@ -230,35 +230,25 @@ pub fn on_use_item_on(
 
     // 1. Upgrade Items: In-place chest tier upgrade!
     if let Some(upgrade) = UpgradeItem::from_id(item_name) {
-        // Read block at position using command data / state
-        // In Horizon server, execute in-place upgrade command preserving data
-        let target_chest = match upgrade {
-            UpgradeItem::Copper => "orechests:copper_chest",
-            UpgradeItem::Iron => "orechests:iron_chest",
-            UpgradeItem::Gold => "orechests:gold_chest",
-            UpgradeItem::Diamond => "orechests:diamond_chest",
-            UpgradeItem::Emerald => "orechests:emerald_chest",
-            UpgradeItem::Crystal => "orechests:crystal_chest",
-            UpgradeItem::Obsidian => "orechests:obsidian_chest",
-            UpgradeItem::Netherite => "orechests:netherite_chest",
-        };
+        let current_block = game.native_block(pos);
+        if let Some(target_tier) = upgrade.target_tier_from_block(&current_block) {
+            let target_chest = target_tier.block_id();
+            let _ = game.native_run_command(&format!(
+                "setblock {x} {y} {z} {target_chest} replace"
+            ));
+            let _ = game.native_run_command(&format!(
+                "clear @p {item_name} 1"
+            ));
+            let _ = game.native_run_command(&format!(
+                "playsound minecraft:block.anvil.use block @a {x} {y} {z} 1.0 1.2"
+            ));
+            let _ = game.native_run_command(&format!(
+                "particle minecraft:happy_villager {x}.5 {y}.5 {z}.5 0.3 0.3 0.3 0.1 15"
+            ));
 
-        // Command: clone / merge container data into upgraded block
-        // /execute positioned x y z run ...
-        let _ = game.native_run_command(&format!(
-            "execute positioned {x} {y} {z} run setblock {x} {y} {z} {target_chest} keep"
-        ));
-
-        // If replaced or updated, play sound effects & particles
-        game.native_run_command(&format!(
-            "playsound minecraft:block.anvil.use block @a {x} {y} {z} 1.0 1.2"
-        ));
-        game.native_run_command(&format!(
-            "particle minecraft:happy_villager {x}.5 {y}.5 {z}.5 0.3 0.3 0.3 0.1 15"
-        ));
-
-        *claimed = true;
-        return;
+            *claimed = true;
+            return;
+        }
     }
 
     // 2. Container Key: Lock / Unlock
@@ -319,6 +309,11 @@ pub fn on_use_item_on(
 pub fn on_world_lifecycle(phase: crate::game::native_lifecycle::WorldPhase) {
     use crate::game::native_lifecycle::WorldPhase;
     match phase {
+        WorldPhase::WorldOpenReady => {
+            if let Some(root) = auto_discover_root() {
+                ensure_content_and_recipes(&root);
+            }
+        }
         WorldPhase::WorldCloseFinal => {
             let mut guard = STATE.lock().unwrap_or_else(|e| e.into_inner());
             if let Some(state) = guard.take() {
@@ -336,4 +331,100 @@ pub fn on_server_tick(game: &mut Game<'_>, phase: crate::game::native_lifecycle:
         let dir = game.native_world_dir();
         ensure_state(dir);
     }
+}
+
+
+// ============================================================================
+// Auto-Content & Recipe Population
+// ============================================================================
+
+pub const RECIPES: &[(&str, &str)] = &[
+    ("christmas_chest.json", "{\n  \"type\": \"minecraft:crafting_shaped\",\n  \"pattern\": [\n    \" B \",\n    \"RCY\",\n    \" S \"\n  ],\n  \"key\": {\n    \"C\": [\n      \"minecraft:chest\",\n      \"minecraft:trapped_chest\",\n      \"minecraft:barrel\"\n    ],\n    \"Y\": \"minecraft:yellow_dye\",\n    \"R\": \"minecraft:red_dye\",\n    \"B\": \"minecraft:sweet_berries\",\n    \"S\": \"minecraft:spruce_sapling\"\n  },\n  \"result\": {\n    \"id\": \"orechests:christmas_chest\",\n    \"count\": 1\n  }\n}"),
+    ("container_key.json", "{\n  \"type\": \"minecraft:crafting_shaped\",\n  \"pattern\": [\n    \"G\",\n    \"S\"\n  ],\n  \"key\": {\n    \"G\": \"minecraft:gold_ingot\",\n    \"S\": \"minecraft:stick\"\n  },\n  \"result\": {\n    \"id\": \"orechests:container_key\",\n    \"count\": 1\n  }\n}"),
+    ("copper_chest.json", "{\n  \"type\": \"minecraft:crafting_shaped\",\n  \"pattern\": [\n    \"CCC\",\n    \"C#C\",\n    \"CCC\"\n  ],\n  \"key\": {\n    \"C\": \"minecraft:copper_ingot\",\n    \"#\": [\n      \"minecraft:chest\",\n      \"minecraft:trapped_chest\",\n      \"minecraft:barrel\"\n    ]\n  },\n  \"result\": {\n    \"id\": \"orechests:copper_chest\",\n    \"count\": 1\n  }\n}"),
+    ("copper_upgrade.json", "{\n  \"type\": \"minecraft:crafting_shaped\",\n  \"pattern\": [\n    \"CCC\",\n    \"CPC\",\n    \"CCC\"\n  ],\n  \"key\": {\n    \"C\": \"minecraft:copper_ingot\",\n    \"P\": [\n      \"#minecraft:planks\",\n      \"minecraft:oak_planks\"\n    ]\n  },\n  \"result\": {\n    \"id\": \"orechests:copper_upgrade\",\n    \"count\": 1\n  }\n}"),
+    ("crystal_chest.json", "{\n  \"type\": \"minecraft:crafting_shaped\",\n  \"pattern\": [\n    \"GGG\",\n    \"GCG\",\n    \"GGG\"\n  ],\n  \"key\": {\n    \"G\": \"minecraft:glass\",\n    \"C\": \"orechests:diamond_chest\"\n  },\n  \"result\": {\n    \"id\": \"orechests:crystal_chest\",\n    \"count\": 1\n  }\n}"),
+    ("crystal_chest_from_emerald.json", "{\n  \"type\": \"minecraft:crafting_shaped\",\n  \"pattern\": [\n    \"GGG\",\n    \"GCG\",\n    \"GGG\"\n  ],\n  \"key\": {\n    \"G\": \"minecraft:glass\",\n    \"C\": \"orechests:emerald_chest\"\n  },\n  \"result\": {\n    \"id\": \"orechests:crystal_chest\",\n    \"count\": 1\n  }\n}"),
+    ("crystal_upgrade.json", "{\n  \"type\": \"minecraft:crafting_shaped\",\n  \"pattern\": [\n    \"GGG\",\n    \"GDG\",\n    \"GGG\"\n  ],\n  \"key\": {\n    \"G\": \"minecraft:glass\",\n    \"D\": \"minecraft:diamond\"\n  },\n  \"result\": {\n    \"id\": \"orechests:crystal_upgrade\",\n    \"count\": 1\n  }\n}"),
+    ("diamond_chest.json", "{\n  \"type\": \"minecraft:crafting_shaped\",\n  \"pattern\": [\n    \"DDD\",\n    \"DCD\",\n    \"DDD\"\n  ],\n  \"key\": {\n    \"D\": \"minecraft:diamond\",\n    \"C\": \"orechests:gold_chest\"\n  },\n  \"result\": {\n    \"id\": \"orechests:diamond_chest\",\n    \"count\": 1\n  }\n}"),
+    ("diamond_chest_glass.json", "{\n  \"type\": \"minecraft:crafting_shaped\",\n  \"pattern\": [\n    \"GGG\",\n    \"DCD\",\n    \"GGG\"\n  ],\n  \"key\": {\n    \"G\": \"minecraft:glass\",\n    \"D\": \"minecraft:diamond\",\n    \"C\": \"orechests:gold_chest\"\n  },\n  \"result\": {\n    \"id\": \"orechests:diamond_chest\",\n    \"count\": 1\n  }\n}"),
+    ("diamond_upgrade.json", "{\n  \"type\": \"minecraft:crafting_shaped\",\n  \"pattern\": [\n    \"DDD\",\n    \"DGD\",\n    \"DDD\"\n  ],\n  \"key\": {\n    \"D\": \"minecraft:diamond\",\n    \"G\": \"minecraft:gold_ingot\"\n  },\n  \"result\": {\n    \"id\": \"orechests:diamond_upgrade\",\n    \"count\": 1\n  }\n}"),
+    ("dirt_chest.json", "{\n  \"type\": \"minecraft:crafting_shaped\",\n  \"pattern\": [\n    \"ddd\",\n    \"dCd\",\n    \"ddd\"\n  ],\n  \"key\": {\n    \"d\": \"minecraft:dirt\",\n    \"C\": [\n      \"minecraft:chest\",\n      \"minecraft:trapped_chest\",\n      \"minecraft:barrel\"\n    ]\n  },\n  \"result\": {\n    \"id\": \"orechests:dirt_chest\",\n    \"count\": 1\n  }\n}"),
+    ("emerald_chest.json", "{\n  \"type\": \"minecraft:crafting_shaped\",\n  \"pattern\": [\n    \"EEE\",\n    \"ECE\",\n    \"EEE\"\n  ],\n  \"key\": {\n    \"E\": \"minecraft:emerald\",\n    \"C\": \"orechests:diamond_chest\"\n  },\n  \"result\": {\n    \"id\": \"orechests:emerald_chest\",\n    \"count\": 1\n  }\n}"),
+    ("emerald_chest_from_gold.json", "{\n  \"type\": \"minecraft:crafting_shaped\",\n  \"pattern\": [\n    \"EEE\",\n    \"ECE\",\n    \"EEE\"\n  ],\n  \"key\": {\n    \"E\": \"minecraft:emerald\",\n    \"C\": \"orechests:gold_chest\"\n  },\n  \"result\": {\n    \"id\": \"orechests:emerald_chest\",\n    \"count\": 1\n  }\n}"),
+    ("emerald_upgrade.json", "{\n  \"type\": \"minecraft:crafting_shaped\",\n  \"pattern\": [\n    \"EEE\",\n    \"EDE\",\n    \"EEE\"\n  ],\n  \"key\": {\n    \"E\": \"minecraft:emerald\",\n    \"D\": \"minecraft:diamond\"\n  },\n  \"result\": {\n    \"id\": \"orechests:emerald_upgrade\",\n    \"count\": 1\n  }\n}"),
+    ("enhanced_hand_truck.json", "{\n  \"type\": \"minecraft:crafting_shaped\",\n  \"pattern\": [\n    \" D \",\n    \"DHD\",\n    \" D \"\n  ],\n  \"key\": {\n    \"D\": \"minecraft:diamond\",\n    \"H\": \"orechests:hand_truck\"\n  },\n  \"result\": {\n    \"id\": \"orechests:enhanced_hand_truck\",\n    \"count\": 1\n  }\n}"),
+    ("gold_chest.json", "{\n  \"type\": \"minecraft:crafting_shaped\",\n  \"pattern\": [\n    \"GGG\",\n    \"GCG\",\n    \"GGG\"\n  ],\n  \"key\": {\n    \"G\": \"minecraft:gold_ingot\",\n    \"C\": \"orechests:iron_chest\"\n  },\n  \"result\": {\n    \"id\": \"orechests:gold_chest\",\n    \"count\": 1\n  }\n}"),
+    ("gold_upgrade.json", "{\n  \"type\": \"minecraft:crafting_shaped\",\n  \"pattern\": [\n    \"GGG\",\n    \"GIG\",\n    \"GGG\"\n  ],\n  \"key\": {\n    \"G\": \"minecraft:gold_ingot\",\n    \"I\": \"minecraft:iron_ingot\"\n  },\n  \"result\": {\n    \"id\": \"orechests:gold_upgrade\",\n    \"count\": 1\n  }\n}"),
+    ("hand_truck.json", "{\n  \"type\": \"minecraft:crafting_shaped\",\n  \"pattern\": [\n    \"  S\",\n    \"  S\",\n    \"IIC\"\n  ],\n  \"key\": {\n    \"S\": \"minecraft:stick\",\n    \"C\": \"minecraft:coal_block\",\n    \"I\": \"minecraft:iron_ingot\"\n  },\n  \"result\": {\n    \"id\": \"orechests:hand_truck\",\n    \"count\": 1\n  }\n}"),
+    ("iron_chest.json", "{\n  \"type\": \"minecraft:crafting_shaped\",\n  \"pattern\": [\n    \"III\",\n    \"I#I\",\n    \"III\"\n  ],\n  \"key\": {\n    \"I\": \"minecraft:iron_ingot\",\n    \"#\": [\n      \"minecraft:chest\",\n      \"minecraft:trapped_chest\",\n      \"minecraft:barrel\"\n    ]\n  },\n  \"result\": {\n    \"id\": \"orechests:iron_chest\",\n    \"count\": 1\n  }\n}"),
+    ("iron_chest_from_copper.json", "{\n  \"type\": \"minecraft:crafting_shaped\",\n  \"pattern\": [\n    \"III\",\n    \"ICI\",\n    \"III\"\n  ],\n  \"key\": {\n    \"I\": \"minecraft:iron_ingot\",\n    \"C\": [\n      \"orechests:copper_chest\",\n      \"minecraft:copper_chest\"\n    ]\n  },\n  \"result\": {\n    \"id\": \"orechests:iron_chest\",\n    \"count\": 1\n  }\n}"),
+    ("iron_chest_from_copper_glass.json", "{\n  \"type\": \"minecraft:crafting_shaped\",\n  \"pattern\": [\n    \"MGM\",\n    \"GCG\",\n    \"MGM\"\n  ],\n  \"key\": {\n    \"M\": \"minecraft:iron_ingot\",\n    \"G\": \"minecraft:glass\",\n    \"C\": [\n      \"orechests:copper_chest\",\n      \"minecraft:copper_chest\"\n    ]\n  },\n  \"result\": {\n    \"id\": \"orechests:iron_chest\",\n    \"count\": 1\n  }\n}"),
+    ("iron_upgrade.json", "{\n  \"type\": \"minecraft:crafting_shaped\",\n  \"pattern\": [\n    \"III\",\n    \"ICI\",\n    \"III\"\n  ],\n  \"key\": {\n    \"I\": \"minecraft:iron_ingot\",\n    \"C\": \"minecraft:copper_ingot\"\n  },\n  \"result\": {\n    \"id\": \"orechests:iron_upgrade\",\n    \"count\": 1\n  }\n}"),
+    ("netherite_chest.json", "{\n  \"type\": \"minecraft:crafting_shapeless\",\n  \"ingredients\": [\n    \"orechests:obsidian_chest\",\n    \"minecraft:netherite_ingot\"\n  ],\n  \"result\": {\n    \"id\": \"orechests:netherite_chest\",\n    \"count\": 1\n  }\n}"),
+    ("netherite_chest_from_diamond.json", "{\n  \"type\": \"minecraft:crafting_shapeless\",\n  \"ingredients\": [\n    \"orechests:diamond_chest\",\n    \"minecraft:netherite_ingot\"\n  ],\n  \"result\": {\n    \"id\": \"orechests:netherite_chest\",\n    \"count\": 1\n  }\n}"),
+    ("netherite_upgrade.json", "{\n  \"type\": \"minecraft:crafting_shaped\",\n  \"pattern\": [\n    \"OOO\",\n    \"ONO\",\n    \"OOO\"\n  ],\n  \"key\": {\n    \"O\": \"minecraft:obsidian\",\n    \"N\": \"minecraft:netherite_ingot\"\n  },\n  \"result\": {\n    \"id\": \"orechests:netherite_upgrade\",\n    \"count\": 1\n  }\n}"),
+    ("obsidian_chest.json", "{\n  \"type\": \"minecraft:crafting_shaped\",\n  \"pattern\": [\n    \"OOO\",\n    \"OCO\",\n    \"OOO\"\n  ],\n  \"key\": {\n    \"O\": \"minecraft:obsidian\",\n    \"C\": \"orechests:diamond_chest\"\n  },\n  \"result\": {\n    \"id\": \"orechests:obsidian_chest\",\n    \"count\": 1\n  }\n}"),
+    ("obsidian_chest_from_emerald.json", "{\n  \"type\": \"minecraft:crafting_shaped\",\n  \"pattern\": [\n    \"OOO\",\n    \"OCO\",\n    \"OOO\"\n  ],\n  \"key\": {\n    \"O\": \"minecraft:obsidian\",\n    \"C\": \"orechests:emerald_chest\"\n  },\n  \"result\": {\n    \"id\": \"orechests:obsidian_chest\",\n    \"count\": 1\n  }\n}"),
+    ("obsidian_upgrade.json", "{\n  \"type\": \"minecraft:crafting_shaped\",\n  \"pattern\": [\n    \"OOO\",\n    \"ODO\",\n    \"OOO\"\n  ],\n  \"key\": {\n    \"O\": \"minecraft:obsidian\",\n    \"D\": \"minecraft:diamond\"\n  },\n  \"result\": {\n    \"id\": \"orechests:obsidian_upgrade\",\n    \"count\": 1\n  }\n}"),
+];
+
+pub const TAGS: &[(&str, &str)] = &[
+    ("item/copper_chests.json", "{\n  \"values\": [\n    \"orechests:copper_chest\",\n    \"minecraft:copper_chest\"\n  ]\n}"),
+    ("item/diamond_emerald_chests.json", "{\n  \"values\": [\n    \"orechests:diamond_chest\",\n    \"orechests:emerald_chest\"\n  ]\n}"),
+    ("item/diamond_emerald_obsidian_chests.json", "{\n  \"values\": [\n    \"orechests:diamond_chest\",\n    \"orechests:emerald_chest\",\n    \"orechests:obsidian_chest\"\n  ]\n}"),
+    ("block/copper_chests.json", "{\n  \"values\": [\n    \"orechests:copper_chest\",\n    \"minecraft:copper_chest\"\n  ]\n}"),
+    ("block/diamond_emerald_chests.json", "{\n  \"values\": [\n    \"orechests:diamond_chest\",\n    \"orechests:emerald_chest\"\n  ]\n}"),
+    ("block/diamond_emerald_obsidian_chests.json", "{\n  \"values\": [\n    \"orechests:diamond_chest\",\n    \"orechests:emerald_chest\",\n    \"orechests:obsidian_chest\"\n  ]\n}"),
+];
+
+pub fn ensure_content_and_recipes(root: &Path) {
+    let mc_recipe_dir = root.join("data/minecraft/recipe");
+    let ore_recipe_dir = root.join("data/orechests/recipe");
+    let _ = fs::create_dir_all(&mc_recipe_dir);
+    let _ = fs::create_dir_all(&ore_recipe_dir);
+
+    for (name, content) in RECIPES {
+        let mc_dest = mc_recipe_dir.join(format!("orechests_{name}"));
+        let ore_dest = ore_recipe_dir.join(name);
+        let _ = fs::write(&mc_dest, content);
+        let _ = fs::write(&ore_dest, content);
+    }
+
+    for (rel_path, content) in TAGS {
+        let tag_dest = root.join(format!("data/orechests/tags/{rel_path}"));
+        if let Some(parent) = tag_dest.parent() {
+            let _ = fs::create_dir_all(parent);
+        }
+        let _ = fs::write(&tag_dest, content);
+    }
+
+    // Ensure orechests is listed in horizon-mod-content.json
+    let marker_path = root.join("horizon-mod-content.json");
+    let mut namespaces: Vec<String> = fs::read(&marker_path)
+        .ok()
+        .and_then(|b| serde_json::from_slice(&b).ok())
+        .unwrap_or_default();
+    if !namespaces.contains(&"orechests".to_string()) {
+        namespaces.push("orechests".to_string());
+        if let Ok(bytes) = serde_json::to_vec(&namespaces) {
+            let _ = fs::write(marker_path, bytes);
+        }
+    }
+}
+
+pub fn auto_discover_root() -> Option<PathBuf> {
+    if let Ok(exe) = std::env::current_exe() {
+        let mut cur = exe.parent();
+        while let Some(dir) = cur {
+            if dir.join("data/minecraft/recipe").is_dir() {
+                return Some(dir.to_path_buf());
+            }
+            if dir.join(".local/horizon-client/26.3").is_dir() {
+                return Some(dir.join(".local/horizon-client/26.3"));
+            }
+            cur = dir.parent();
+        }
+    }
+    None
 }

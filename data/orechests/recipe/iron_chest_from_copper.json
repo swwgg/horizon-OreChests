@@ -7,7 +7,10 @@
   ],
   "key": {
     "I": "minecraft:iron_ingot",
-    "C": "orechests:copper_chest"
+    "C": [
+      "orechests:copper_chest",
+      "minecraft:copper_chest"
+    ]
   },
   "result": {
     "id": "orechests:iron_chest",

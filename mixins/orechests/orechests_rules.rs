@@ -55,7 +55,11 @@ impl ChestTier {
     }
 
     pub fn from_id(id: &str) -> Option<Self> {
-        let clean = id.strip_prefix("orechests:").or_else(|| id.strip_prefix("ironchest:")).unwrap_or(id);
+        let clean = id
+            .strip_prefix("orechests:")
+            .or_else(|| id.strip_prefix("ironchest:"))
+            .or_else(|| id.strip_prefix("minecraft:"))
+            .unwrap_or(id);
         match clean {
             "dirt_chest" => Some(ChestTier::Dirt),
             "copper_chest" => Some(ChestTier::Copper),
@@ -218,10 +222,14 @@ impl UpgradeItem {
     }
 
     /// Checks if this upgrade can be applied to `source_block`.
-    /// `source_block` can be vanilla "minecraft:chest" or an ore chest.
+    /// `source_block` can be vanilla "minecraft:chest", "minecraft:copper_chest" or an ore chest.
     pub fn target_tier_from_block(&self, source_block: &str) -> Option<ChestTier> {
-        let clean = source_block.strip_prefix("orechests:").or_else(|| source_block.strip_prefix("ironchest:")).unwrap_or(source_block);
-        let is_vanilla_wood = clean == "minecraft:chest" || clean == "chest";
+        let clean = source_block
+            .strip_prefix("orechests:")
+            .or_else(|| source_block.strip_prefix("ironchest:"))
+            .or_else(|| source_block.strip_prefix("minecraft:"))
+            .unwrap_or(source_block);
+        let is_vanilla_wood = clean == "chest" || clean == "trapped_chest" || clean == "barrel";
 
         match self {
             UpgradeItem::Copper => {
@@ -520,6 +528,10 @@ mod tests {
         // Copper -> Iron
         assert_eq!(
             UpgradeItem::Iron.target_tier_from_block("orechests:copper_chest"),
+            Some(ChestTier::Iron)
+        );
+        assert_eq!(
+            UpgradeItem::Iron.target_tier_from_block("minecraft:copper_chest"),
             Some(ChestTier::Iron)
         );
         // Iron -> Gold
