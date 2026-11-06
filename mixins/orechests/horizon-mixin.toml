@@ -45,7 +45,7 @@ target = "horizon_client::game::native_hooks::Game<'_>::native_screen"
 helper = "screen.rs"
 bindings = [
   { name = "block", ty = "&str", value = "block" },
-  { name = "screen", ty = "&mut Option<horizon_client::mod_api::NativeScreen>", value = "&mut *screen" },
+  { name = "screen", ty = "&mut Option<crate::game::native_hooks::NativeScreen>", value = "&mut *screen" },
 ]
 
 [[injection]]

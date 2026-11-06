@@ -4,7 +4,7 @@
 use crate::game::{
     Game,
     orechests_rules::{
-        calculate_screen_layout, ChestTier, Config, KeyRegistry, ScreenLayout, UpgradeItem,
+        calculate_screen_layout, ChestTier, Config, KeyRegistry, UpgradeItem,
     },
 };
 use horizon_client::text::Text;
@@ -148,26 +148,25 @@ pub fn on_block_entity_container(block: &str, container: &mut Option<horizon_cli
         ],
         inputs: slot_indices.clone(),
         outputs: slot_indices,
-        menu: Some(tier.block_id()),
+        menu: Some(tier.menu_id().to_string()),
     });
 }
 
 /// Lays out container GUI on the screen.
-pub fn on_screen(block: &str, screen: &mut Option<horizon_client::mod_api::NativeScreen>) {
+pub fn on_screen(block: &str, screen: &mut Option<crate::game::native_hooks::NativeScreen>) {
     let Some(tier) = ChestTier::from_id(block) else {
         return;
     };
 
     let layout = calculate_screen_layout(tier.default_columns(), tier.default_rows());
 
-    *screen = Some(horizon_client::mod_api::NativeScreen {
+    *screen = Some(crate::game::native_hooks::NativeScreen {
         width: layout.width,
         height: layout.height,
         slots: layout.slots,
         inventory_x: layout.inventory_x,
         inventory_y: layout.inventory_y,
         own_labels: false,
-        own_background: false,
     });
 }
 
@@ -227,7 +226,7 @@ pub fn on_use_item_on(
     }
 
     let [x, y, z] = pos;
-    let item_name = stack.item.as_str();
+    let item_name = &stack.item;
 
     // 1. Upgrade Items: In-place chest tier upgrade!
     if let Some(upgrade) = UpgradeItem::from_id(item_name) {
@@ -246,7 +245,7 @@ pub fn on_use_item_on(
 
         // Command: clone / merge container data into upgraded block
         // /execute positioned x y z run ...
-        let upgrade_success = game.native_run_command(&format!(
+        let _ = game.native_run_command(&format!(
             "execute positioned {x} {y} {z} run setblock {x} {y} {z} {target_chest} keep"
         ));
 
@@ -320,7 +319,7 @@ pub fn on_use_item_on(
 pub fn on_world_lifecycle(phase: crate::game::native_lifecycle::WorldPhase) {
     use crate::game::native_lifecycle::WorldPhase;
     match phase {
-        WorldPhase::Stopping => {
+        WorldPhase::WorldCloseFinal => {
             let mut guard = STATE.lock().unwrap_or_else(|e| e.into_inner());
             if let Some(state) = guard.take() {
                 save(&state);
@@ -333,10 +332,8 @@ pub fn on_world_lifecycle(phase: crate::game::native_lifecycle::WorldPhase) {
 /// Periodic server tick hook.
 pub fn on_server_tick(game: &mut Game<'_>, phase: crate::game::native_lifecycle::ServerTickPhase) {
     use crate::game::native_lifecycle::ServerTickPhase;
-    if phase != ServerTickPhase::End {
-        return;
+    if let ServerTickPhase::ServerTickEnd { world_running: true } = phase {
+        let dir = game.native_world_dir();
+        ensure_state(dir);
     }
-
-    let dir = game.native_world_dir();
-    ensure_state(dir);
 }

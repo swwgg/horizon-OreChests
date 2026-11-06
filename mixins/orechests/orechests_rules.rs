@@ -72,27 +72,41 @@ impl ChestTier {
     }
 
     pub fn default_columns(&self) -> usize {
-        match self {
-            ChestTier::Christmas => 9,
-            ChestTier::Copper | ChestTier::Iron | ChestTier::Gold => 9,
-            ChestTier::Diamond | ChestTier::Emerald | ChestTier::Crystal | ChestTier::Obsidian => 12,
-            ChestTier::Netherite | ChestTier::Dirt => 14,
-        }
+        9
     }
 
     pub fn default_rows(&self) -> usize {
         match self {
+            ChestTier::Dirt => 1,
             ChestTier::Christmas => 3,
             ChestTier::Copper => 5,
-            ChestTier::Iron => 6,
-            ChestTier::Gold => 9,
-            ChestTier::Diamond | ChestTier::Emerald | ChestTier::Crystal | ChestTier::Obsidian => 9,
-            ChestTier::Netherite | ChestTier::Dirt => 9,
+            ChestTier::Iron
+            | ChestTier::Gold
+            | ChestTier::Diamond
+            | ChestTier::Emerald
+            | ChestTier::Crystal
+            | ChestTier::Obsidian
+            | ChestTier::Netherite => 6,
         }
     }
 
     pub fn default_slots(&self) -> usize {
         self.default_columns() * self.default_rows()
+    }
+
+    pub fn menu_id(&self) -> &'static str {
+        match self {
+            ChestTier::Dirt => "minecraft:generic_9x1",
+            ChestTier::Christmas => "minecraft:generic_9x3",
+            ChestTier::Copper => "minecraft:generic_9x5",
+            ChestTier::Iron
+            | ChestTier::Gold
+            | ChestTier::Diamond
+            | ChestTier::Emerald
+            | ChestTier::Crystal
+            | ChestTier::Obsidian
+            | ChestTier::Netherite => "minecraft:generic_9x6",
+        }
     }
 
     /// Block hardness (destroy time in seconds)
@@ -474,15 +488,21 @@ mod tests {
 
     #[test]
     fn test_tier_properties() {
+        assert_eq!(ChestTier::Dirt.default_slots(), 9);
+        assert_eq!(ChestTier::Christmas.default_slots(), 27);
         assert_eq!(ChestTier::Copper.default_slots(), 45);
         assert_eq!(ChestTier::Iron.default_slots(), 54);
-        assert_eq!(ChestTier::Gold.default_slots(), 81);
-        assert_eq!(ChestTier::Diamond.default_slots(), 108);
-        assert_eq!(ChestTier::Crystal.default_slots(), 108);
-        assert_eq!(ChestTier::Obsidian.default_slots(), 108);
-        assert_eq!(ChestTier::Netherite.default_slots(), 126);
-        assert_eq!(ChestTier::Dirt.default_slots(), 126);
-        assert_eq!(ChestTier::Christmas.default_slots(), 27);
+        assert_eq!(ChestTier::Gold.default_slots(), 54);
+        assert_eq!(ChestTier::Diamond.default_slots(), 54);
+        assert_eq!(ChestTier::Crystal.default_slots(), 54);
+        assert_eq!(ChestTier::Obsidian.default_slots(), 54);
+        assert_eq!(ChestTier::Netherite.default_slots(), 54);
+
+        assert_eq!(ChestTier::Dirt.menu_id(), "minecraft:generic_9x1");
+        assert_eq!(ChestTier::Christmas.menu_id(), "minecraft:generic_9x3");
+        assert_eq!(ChestTier::Copper.menu_id(), "minecraft:generic_9x5");
+        assert_eq!(ChestTier::Iron.menu_id(), "minecraft:generic_9x6");
+        assert_eq!(ChestTier::Netherite.menu_id(), "minecraft:generic_9x6");
 
         assert!(ChestTier::Netherite.is_fireproof());
         assert!(!ChestTier::Iron.is_fireproof());
@@ -550,15 +570,12 @@ mod tests {
         assert_eq!(l_copper.inventory_y, 18.0 + 5.0 * 18.0 + 13.0); // 121.0
         assert_eq!(l_copper.height, 121.0 + 96.0); // 217.0
 
-        let l_diamond = calculate_screen_layout(12, 9);
-        assert_eq!(l_diamond.width, 231.0);
-        assert_eq!(l_diamond.slots.len(), 108);
-        assert_eq!(l_diamond.inventory_x, 35.0); // 8 + (216 - 162) / 2 = 8 + 27 = 35
-
-        let l_netherite = calculate_screen_layout(14, 9);
-        assert_eq!(l_netherite.width, 267.0);
-        assert_eq!(l_netherite.slots.len(), 126);
-        assert_eq!(l_netherite.inventory_x, 53.0); // 8 + (252 - 162) / 2 = 8 + 45 = 53
+        let l_iron = calculate_screen_layout(9, 6);
+        assert_eq!(l_iron.width, 176.0);
+        assert_eq!(l_iron.slots.len(), 54);
+        assert_eq!(l_iron.inventory_x, 8.0);
+        assert_eq!(l_iron.inventory_y, 18.0 + 6.0 * 18.0 + 13.0); // 139.0
+        assert_eq!(l_iron.height, 139.0 + 96.0); // 235.0
     }
 
     #[test]

@@ -2,7 +2,7 @@
 
 fn orechests_screen(
     block: &str,
-    screen: &mut Option<horizon_client::mod_api::NativeScreen>,
+    screen: &mut Option<crate::game::native_hooks::NativeScreen>,
 ) {
     crate::game::orechests_glue::on_screen(block, screen);
 }
