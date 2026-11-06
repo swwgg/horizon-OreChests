@@ -120,59 +120,6 @@ fn ensure_state(dir: Option<PathBuf>) -> bool {
 // Registration Hooks
 // ============================================================================
 
-/// Registers the 10 chest blocks in Horizon's block registry.
-pub fn register_blocks(blocks: &mut Vec<horizon_mods::content::Block>) {
-    for tier in ChestTier::ALL {
-        blocks.push(horizon_mods::content::Block {
-            id: tier.block_id(),
-            template: "minecraft:chest".into(),
-            properties: horizon_mods::content::BlockProperties {
-                hardness: Some(tier.hardness()),
-                explosion_resistance: Some(tier.explosion_resistance()),
-                requires_tool: Some(true),
-                sounds: Some(tier.sound_type().into()),
-                occludes: if tier == ChestTier::Crystal { Some(false) } else { None },
-                ..Default::default()
-            },
-            item: true,
-            ..Default::default()
-        });
-    }
-}
-
-/// Registers upgrade items, container key, and hand trucks.
-pub fn register_items(items: &mut Vec<horizon_mods::content::Item>) {
-    for upgrade in UpgradeItem::ALL {
-        items.push(horizon_mods::content::Item {
-            id: upgrade.item_id(),
-            template: "minecraft:iron_ingot".into(),
-            max_stack_size: Some(16),
-            ..Default::default()
-        });
-    }
-
-    items.push(horizon_mods::content::Item {
-        id: "orechests:container_key".into(),
-        template: "minecraft:tripwire_hook".into(),
-        max_stack_size: Some(1),
-        ..Default::default()
-    });
-
-    items.push(horizon_mods::content::Item {
-        id: "orechests:hand_truck".into(),
-        template: "minecraft:stick".into(),
-        max_stack_size: Some(1),
-        ..Default::default()
-    });
-
-    items.push(horizon_mods::content::Item {
-        id: "orechests:enhanced_hand_truck".into(),
-        template: "minecraft:blaze_rod".into(),
-        max_stack_size: Some(1),
-        ..Default::default()
-    });
-}
-
 /// Provides a block entity for ore chests.
 pub fn on_block_entity(block: &str, entity: &mut Option<(String, horizon_world::nbt::Compound)>) {
     if block.starts_with("orechests:") {

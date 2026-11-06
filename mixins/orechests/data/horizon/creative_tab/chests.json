@@ -1,0 +1,27 @@
+{
+  "title": "Ore Chests",
+  "icon": "orechests:iron_chest",
+  "items": [
+    "orechests:dirt_chest",
+    "orechests:copper_chest",
+    "orechests:iron_chest",
+    "orechests:gold_chest",
+    "orechests:diamond_chest",
+    "orechests:emerald_chest",
+    "orechests:crystal_chest",
+    "orechests:obsidian_chest",
+    "orechests:netherite_chest",
+    "orechests:christmas_chest",
+    "orechests:copper_upgrade",
+    "orechests:iron_upgrade",
+    "orechests:gold_upgrade",
+    "orechests:diamond_upgrade",
+    "orechests:emerald_upgrade",
+    "orechests:crystal_upgrade",
+    "orechests:obsidian_upgrade",
+    "orechests:netherite_upgrade",
+    "orechests:container_key",
+    "orechests:hand_truck",
+    "orechests:enhanced_hand_truck"
+  ]
+}
