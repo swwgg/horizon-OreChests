@@ -1,6 +1,12 @@
 {
-    "parent": "orechests:block/chest_template",
-    "textures": {
-        "particle": "minecraft:block/dirt"
-    }
+  "parent": "orechests:block/chest_template",
+  "textures": {
+    "top": "orechests:block/dirt_chest_top",
+    "bottom": "orechests:block/dirt_chest_bottom",
+    "front": "orechests:block/dirt_chest_front",
+    "side": "orechests:block/dirt_chest_side",
+    "back": "orechests:block/dirt_chest_back",
+    "latch": "orechests:block/dirt_chest_latch",
+    "particle": "orechests:block/dirt_chest_front"
+  }
 }

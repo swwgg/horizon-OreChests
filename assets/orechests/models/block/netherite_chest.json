@@ -1,6 +1,12 @@
 {
   "parent": "orechests:block/chest_template",
   "textures": {
-    "particle": "minecraft:block/netherite_block"
+    "top": "orechests:block/netherite_chest_top",
+    "bottom": "orechests:block/netherite_chest_bottom",
+    "front": "orechests:block/netherite_chest_front",
+    "side": "orechests:block/netherite_chest_side",
+    "back": "orechests:block/netherite_chest_back",
+    "latch": "orechests:block/netherite_chest_latch",
+    "particle": "orechests:block/netherite_chest_front"
   }
 }

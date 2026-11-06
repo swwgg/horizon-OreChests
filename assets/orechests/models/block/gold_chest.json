@@ -1,6 +1,12 @@
 {
-    "parent": "orechests:block/chest_template",
-    "textures": {
-        "particle": "minecraft:block/gold_block"
-    }
+  "parent": "orechests:block/chest_template",
+  "textures": {
+    "top": "orechests:block/gold_chest_top",
+    "bottom": "orechests:block/gold_chest_bottom",
+    "front": "orechests:block/gold_chest_front",
+    "side": "orechests:block/gold_chest_side",
+    "back": "orechests:block/gold_chest_back",
+    "latch": "orechests:block/gold_chest_latch",
+    "particle": "orechests:block/gold_chest_front"
+  }
 }

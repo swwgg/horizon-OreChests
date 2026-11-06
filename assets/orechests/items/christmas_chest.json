@@ -1,10 +1,6 @@
 {
   "model": {
-    "type": "minecraft:special",
-    "base": "minecraft:item/chest",
-    "model": {
-      "type": "minecraft:chest",
-      "texture": "minecraft:christmas"
-    }
+    "type": "minecraft:model",
+    "model": "orechests:item/christmas_chest"
   }
 }

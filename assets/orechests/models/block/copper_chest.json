@@ -1,6 +1,12 @@
 {
-    "parent": "orechests:block/chest_template",
-    "textures": {
-        "particle": "minecraft:block/copper_block"
-    }
+  "parent": "orechests:block/chest_template",
+  "textures": {
+    "top": "orechests:block/copper_chest_top",
+    "bottom": "orechests:block/copper_chest_bottom",
+    "front": "orechests:block/copper_chest_front",
+    "side": "orechests:block/copper_chest_side",
+    "back": "orechests:block/copper_chest_back",
+    "latch": "orechests:block/copper_chest_latch",
+    "particle": "orechests:block/copper_chest_front"
+  }
 }

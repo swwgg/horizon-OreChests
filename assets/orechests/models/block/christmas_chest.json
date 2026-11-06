@@ -1,6 +1,12 @@
 {
-    "parent": "orechests:block/chest_template",
-    "textures": {
-        "particle": "minecraft:block/red_wool"
-    }
+  "parent": "orechests:block/chest_template",
+  "textures": {
+    "top": "orechests:block/christmas_chest_top",
+    "bottom": "orechests:block/christmas_chest_bottom",
+    "front": "orechests:block/christmas_chest_front",
+    "side": "orechests:block/christmas_chest_side",
+    "back": "orechests:block/christmas_chest_back",
+    "latch": "orechests:block/christmas_chest_latch",
+    "particle": "orechests:block/christmas_chest_front"
+  }
 }

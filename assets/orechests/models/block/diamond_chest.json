@@ -1,6 +1,12 @@
 {
-    "parent": "orechests:block/chest_template",
-    "textures": {
-        "particle": "minecraft:block/diamond_block"
-    }
+  "parent": "orechests:block/chest_template",
+  "textures": {
+    "top": "orechests:block/diamond_chest_top",
+    "bottom": "orechests:block/diamond_chest_bottom",
+    "front": "orechests:block/diamond_chest_front",
+    "side": "orechests:block/diamond_chest_side",
+    "back": "orechests:block/diamond_chest_back",
+    "latch": "orechests:block/diamond_chest_latch",
+    "particle": "orechests:block/diamond_chest_front"
+  }
 }
