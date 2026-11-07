@@ -8,7 +8,7 @@ The launcher compiles it on the pinned Horizon revision.
 import hashlib
 import json
 from pathlib import Path
-import re
+import shutil
 import tomllib
 import zipfile
 
@@ -33,6 +33,14 @@ def package():
 
     manifest = dict(schema=1, id=mod['id'], version=mod['version'], game=GAME,
                     horizon=compat['horizon_revision'], mixins=compat['horizon_mixins_revision'])
+
+    # Sync data/<id>/ into mixins/<id>/data/ so both bundles stay identical
+    src_data = ROOT / 'data' / mod['id']
+    dst_data = bundle / 'data'
+    if src_data.exists():
+        if dst_data.exists():
+            shutil.rmtree(dst_data)
+        shutil.copytree(src_data, dst_data)
 
     # 1. Build .hmod containing content (assets/data) + horizon-mod.toml
     hmod_out = ROOT / 'target' / f"{mod['id']}-{mod['version']}.hmod"

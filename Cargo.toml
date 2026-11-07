@@ -4,11 +4,10 @@ version = "1.0.0"
 edition = "2024"
 license = "MIT"
 publish = false
-description = "Ore Chests (Iron Chests port) for Horizon: upgradable tiered chests from copper to netherite."
+description = "Ore Chests for Horizon: tiered chests from copper to netherite."
 
 [lib]
 path = "src/lib.rs"
 
 [dependencies]
 serde = { version = "1", features = ["derive"] }
-serde_json = "1"

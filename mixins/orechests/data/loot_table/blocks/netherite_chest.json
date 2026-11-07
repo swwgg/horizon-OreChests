@@ -7,13 +7,18 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "orechests:dirt_chest",
+          "name": "orechests:netherite_chest",
           "functions": [
             {
               "function": "minecraft:copy_name",
               "source": "block_entity"
             }
           ]
+        }
+      ],
+      "conditions": [
+        {
+          "condition": "minecraft:survives_explosion"
         }
       ]
     }

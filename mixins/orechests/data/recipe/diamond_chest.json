@@ -2,12 +2,16 @@
   "type": "minecraft:crafting_shaped",
   "pattern": [
     "DDD",
-    "DCD",
+    "D#D",
     "DDD"
   ],
   "key": {
     "D": "minecraft:diamond",
-    "C": "orechests:gold_chest"
+    "#": [
+      "minecraft:chest",
+      "minecraft:trapped_chest",
+      "minecraft:barrel"
+    ]
   },
   "result": {
     "id": "orechests:diamond_chest",

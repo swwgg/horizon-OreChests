@@ -1,9 +1,0 @@
-{
-  "template": "minecraft:netherite_ingot",
-  "max_stack_size": 16,
-  "components": {
-    "minecraft:damage_resistant": {
-      "types": "#minecraft:is_fire"
-    }
-  }
-}

@@ -1,9 +1,18 @@
 {
-  "type": "minecraft:crafting_shapeless",
-  "ingredients": [
-    "orechests:diamond_chest",
-    "minecraft:netherite_ingot"
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "NNN",
+    "N#N",
+    "NNN"
   ],
+  "key": {
+    "N": "minecraft:netherite_ingot",
+    "#": [
+      "minecraft:chest",
+      "minecraft:trapped_chest",
+      "minecraft:barrel"
+    ]
+  },
   "result": {
     "id": "orechests:netherite_chest",
     "count": 1

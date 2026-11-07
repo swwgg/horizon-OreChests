@@ -1,9 +1,0 @@
-{
-  "template": "minecraft:chest",
-  "properties": {
-    "hardness": 0.5,
-    "explosion_resistance": 0.5,
-    "sounds": "minecraft:gravel"
-  },
-  "item": true
-}
