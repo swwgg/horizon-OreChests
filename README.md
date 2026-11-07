@@ -14,7 +14,7 @@ A native Rust mod for [Horizon Launcher](https://github.com/horizon-rust/horizon
 | **Iron Chest** (Железный) | 54 (9×6) | `minecraft:iron_ingot` | Прочность 5.0, взрывоустойчивость 6.0 |
 | **Gold Chest** (Золотой) | 81 (9×9) | `minecraft:gold_ingot` | Прочность 3.0, взрывоустойчивость 6.0 |
 | **Diamond Chest** (Алмазный) | 108 (12×9) | `minecraft:diamond` | Прочность 5.0, взрывоустойчивость 6.0 |
-| **Netherite Chest** (Незеритовый) | 126 (14×9) | `minecraft:netherite_ingot` | Огнеупорный, взрывоустойчивость 1200.0 |
+| **Netherite Chest** (Незеритовый) | 126 (14×9) | 1 `minecraft:netherite_ingot` (сверху) + 7 `minecraft:obsidian` | Огнеупорный, взрывоустойчивость 1200.0 |
 
 ---
 
