@@ -115,4 +115,6 @@ id = "content_root"
 kind = "HEAD"
 target = "horizon_client::game::mods::content_root"
 helper = "content_root.rs"
-bindings = []
+bindings = [
+  { name = "root", ty = "&std::path::Path", value = "root" },
+]

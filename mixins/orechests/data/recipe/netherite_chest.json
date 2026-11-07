@@ -1,7 +1,7 @@
 {
   "type": "minecraft:crafting_shapeless",
   "ingredients": [
-    "orechests:obsidian_chest",
+    "orechests:diamond_chest",
     "minecraft:netherite_ingot"
   ],
   "result": {

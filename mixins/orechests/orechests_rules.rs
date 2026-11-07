@@ -14,25 +14,17 @@ pub enum ChestTier {
     Iron,
     Gold,
     Diamond,
-    Emerald,
-    Crystal,
-    Obsidian,
     Netherite,
-    Christmas,
 }
 
 impl ChestTier {
-    pub const ALL: [ChestTier; 10] = [
+    pub const ALL: [ChestTier; 6] = [
         ChestTier::Dirt,
         ChestTier::Copper,
         ChestTier::Iron,
         ChestTier::Gold,
         ChestTier::Diamond,
-        ChestTier::Emerald,
-        ChestTier::Crystal,
-        ChestTier::Obsidian,
         ChestTier::Netherite,
-        ChestTier::Christmas,
     ];
 
     pub fn id(&self) -> &'static str {
@@ -42,11 +34,7 @@ impl ChestTier {
             ChestTier::Iron => "iron_chest",
             ChestTier::Gold => "gold_chest",
             ChestTier::Diamond => "diamond_chest",
-            ChestTier::Emerald => "emerald_chest",
-            ChestTier::Crystal => "crystal_chest",
-            ChestTier::Obsidian => "obsidian_chest",
             ChestTier::Netherite => "netherite_chest",
-            ChestTier::Christmas => "christmas_chest",
         }
     }
 
@@ -66,31 +54,27 @@ impl ChestTier {
             "iron_chest" => Some(ChestTier::Iron),
             "gold_chest" => Some(ChestTier::Gold),
             "diamond_chest" => Some(ChestTier::Diamond),
-            "emerald_chest" => Some(ChestTier::Emerald),
-            "crystal_chest" => Some(ChestTier::Crystal),
-            "obsidian_chest" => Some(ChestTier::Obsidian),
             "netherite_chest" => Some(ChestTier::Netherite),
-            "christmas_chest" => Some(ChestTier::Christmas),
             _ => None,
         }
     }
 
     pub fn default_columns(&self) -> usize {
-        9
+        match self {
+            ChestTier::Diamond => 12,
+            ChestTier::Netherite => 14,
+            _ => 9,
+        }
     }
 
     pub fn default_rows(&self) -> usize {
         match self {
             ChestTier::Dirt => 1,
-            ChestTier::Christmas => 3,
             ChestTier::Copper => 5,
-            ChestTier::Iron
-            | ChestTier::Gold
-            | ChestTier::Diamond
-            | ChestTier::Emerald
-            | ChestTier::Crystal
-            | ChestTier::Obsidian
-            | ChestTier::Netherite => 6,
+            ChestTier::Iron => 6,
+            ChestTier::Gold => 9,
+            ChestTier::Diamond => 9,
+            ChestTier::Netherite => 9,
         }
     }
 
@@ -101,15 +85,11 @@ impl ChestTier {
     pub fn menu_id(&self) -> &'static str {
         match self {
             ChestTier::Dirt => "minecraft:generic_9x1",
-            ChestTier::Christmas => "minecraft:generic_9x3",
             ChestTier::Copper => "minecraft:generic_9x5",
-            ChestTier::Iron
-            | ChestTier::Gold
-            | ChestTier::Diamond
-            | ChestTier::Emerald
-            | ChestTier::Crystal
-            | ChestTier::Obsidian
-            | ChestTier::Netherite => "minecraft:generic_9x6",
+            ChestTier::Iron => "minecraft:generic_9x6",
+            ChestTier::Gold => "orechests:gold_chest",
+            ChestTier::Diamond => "orechests:diamond_chest",
+            ChestTier::Netherite => "orechests:netherite_chest",
         }
     }
 
@@ -119,10 +99,8 @@ impl ChestTier {
             ChestTier::Dirt => 0.5,
             ChestTier::Copper | ChestTier::Gold => 3.0,
             ChestTier::Iron => 5.0,
-            ChestTier::Diamond | ChestTier::Emerald => 5.0,
-            ChestTier::Crystal => 0.3,
-            ChestTier::Obsidian | ChestTier::Netherite => 50.0,
-            ChestTier::Christmas => 2.5,
+            ChestTier::Diamond => 5.0,
+            ChestTier::Netherite => 50.0,
         }
     }
 
@@ -130,10 +108,8 @@ impl ChestTier {
     pub fn explosion_resistance(&self) -> f32 {
         match self {
             ChestTier::Dirt => 0.5,
-            ChestTier::Copper | ChestTier::Gold | ChestTier::Iron | ChestTier::Diamond | ChestTier::Emerald => 6.0,
-            ChestTier::Crystal => 0.3,
-            ChestTier::Obsidian | ChestTier::Netherite => 1200.0,
-            ChestTier::Christmas => 2.5,
+            ChestTier::Copper | ChestTier::Gold | ChestTier::Iron | ChestTier::Diamond => 6.0,
+            ChestTier::Netherite => 1200.0,
         }
     }
 
@@ -144,11 +120,8 @@ impl ChestTier {
             ChestTier::Copper => "minecraft:copper_block",
             ChestTier::Iron => "minecraft:iron_block",
             ChestTier::Gold => "minecraft:copper_block",
-            ChestTier::Diamond | ChestTier::Emerald => "minecraft:stone",
-            ChestTier::Crystal => "minecraft:amethyst_block",
-            ChestTier::Obsidian => "minecraft:stone",
+            ChestTier::Diamond => "minecraft:stone",
             ChestTier::Netherite => "minecraft:netherite_block",
-            ChestTier::Christmas => "minecraft:wood",
         }
     }
 
@@ -171,21 +144,15 @@ pub enum UpgradeItem {
     Iron,
     Gold,
     Diamond,
-    Emerald,
-    Crystal,
-    Obsidian,
     Netherite,
 }
 
 impl UpgradeItem {
-    pub const ALL: [UpgradeItem; 8] = [
+    pub const ALL: [UpgradeItem; 5] = [
         UpgradeItem::Copper,
         UpgradeItem::Iron,
         UpgradeItem::Gold,
         UpgradeItem::Diamond,
-        UpgradeItem::Emerald,
-        UpgradeItem::Crystal,
-        UpgradeItem::Obsidian,
         UpgradeItem::Netherite,
     ];
 
@@ -195,9 +162,6 @@ impl UpgradeItem {
             UpgradeItem::Iron => "iron_upgrade",
             UpgradeItem::Gold => "gold_upgrade",
             UpgradeItem::Diamond => "diamond_upgrade",
-            UpgradeItem::Emerald => "emerald_upgrade",
-            UpgradeItem::Crystal => "crystal_upgrade",
-            UpgradeItem::Obsidian => "obsidian_upgrade",
             UpgradeItem::Netherite => "netherite_upgrade",
         }
     }
@@ -213,9 +177,6 @@ impl UpgradeItem {
             "iron_upgrade" => Some(UpgradeItem::Iron),
             "gold_upgrade" => Some(UpgradeItem::Gold),
             "diamond_upgrade" => Some(UpgradeItem::Diamond),
-            "emerald_upgrade" => Some(UpgradeItem::Emerald),
-            "crystal_upgrade" => Some(UpgradeItem::Crystal),
-            "obsidian_upgrade" => Some(UpgradeItem::Obsidian),
             "netherite_upgrade" => Some(UpgradeItem::Netherite),
             _ => None,
         }
@@ -260,29 +221,8 @@ impl UpgradeItem {
                     None
                 }
             }
-            UpgradeItem::Emerald => {
-                if clean == "gold_chest" {
-                    Some(ChestTier::Emerald)
-                } else {
-                    None
-                }
-            }
-            UpgradeItem::Crystal => {
-                if clean == "diamond_chest" || clean == "emerald_chest" {
-                    Some(ChestTier::Crystal)
-                } else {
-                    None
-                }
-            }
-            UpgradeItem::Obsidian => {
-                if clean == "diamond_chest" || clean == "emerald_chest" {
-                    Some(ChestTier::Obsidian)
-                } else {
-                    None
-                }
-            }
             UpgradeItem::Netherite => {
-                if clean == "diamond_chest" || clean == "emerald_chest" || clean == "obsidian_chest" {
+                if clean == "diamond_chest" {
                     Some(ChestTier::Netherite)
                 } else {
                     None
@@ -497,20 +437,25 @@ mod tests {
     #[test]
     fn test_tier_properties() {
         assert_eq!(ChestTier::Dirt.default_slots(), 9);
-        assert_eq!(ChestTier::Christmas.default_slots(), 27);
         assert_eq!(ChestTier::Copper.default_slots(), 45);
         assert_eq!(ChestTier::Iron.default_slots(), 54);
-        assert_eq!(ChestTier::Gold.default_slots(), 54);
-        assert_eq!(ChestTier::Diamond.default_slots(), 54);
-        assert_eq!(ChestTier::Crystal.default_slots(), 54);
-        assert_eq!(ChestTier::Obsidian.default_slots(), 54);
-        assert_eq!(ChestTier::Netherite.default_slots(), 54);
+        assert_eq!(ChestTier::Gold.default_slots(), 81);
+        assert_eq!(ChestTier::Diamond.default_slots(), 108);
+        assert_eq!(ChestTier::Netherite.default_slots(), 126);
+
+        // Strict progression check
+        assert!(ChestTier::Dirt.default_slots() < ChestTier::Copper.default_slots());
+        assert!(ChestTier::Copper.default_slots() < ChestTier::Iron.default_slots());
+        assert!(ChestTier::Iron.default_slots() < ChestTier::Gold.default_slots());
+        assert!(ChestTier::Gold.default_slots() < ChestTier::Diamond.default_slots());
+        assert!(ChestTier::Diamond.default_slots() < ChestTier::Netherite.default_slots());
 
         assert_eq!(ChestTier::Dirt.menu_id(), "minecraft:generic_9x1");
-        assert_eq!(ChestTier::Christmas.menu_id(), "minecraft:generic_9x3");
         assert_eq!(ChestTier::Copper.menu_id(), "minecraft:generic_9x5");
         assert_eq!(ChestTier::Iron.menu_id(), "minecraft:generic_9x6");
-        assert_eq!(ChestTier::Netherite.menu_id(), "minecraft:generic_9x6");
+        assert_eq!(ChestTier::Gold.menu_id(), "orechests:gold_chest");
+        assert_eq!(ChestTier::Diamond.menu_id(), "orechests:diamond_chest");
+        assert_eq!(ChestTier::Netherite.menu_id(), "orechests:netherite_chest");
 
         assert!(ChestTier::Netherite.is_fireproof());
         assert!(!ChestTier::Iron.is_fireproof());
@@ -539,31 +484,14 @@ mod tests {
             UpgradeItem::Gold.target_tier_from_block("iron_chest"),
             Some(ChestTier::Gold)
         );
-        // Gold -> Diamond or Emerald
+        // Gold -> Diamond
         assert_eq!(
             UpgradeItem::Diamond.target_tier_from_block("gold_chest"),
             Some(ChestTier::Diamond)
         );
-        assert_eq!(
-            UpgradeItem::Emerald.target_tier_from_block("gold_chest"),
-            Some(ChestTier::Emerald)
-        );
-        // Diamond -> Crystal or Obsidian or Netherite
-        assert_eq!(
-            UpgradeItem::Crystal.target_tier_from_block("diamond_chest"),
-            Some(ChestTier::Crystal)
-        );
-        assert_eq!(
-            UpgradeItem::Obsidian.target_tier_from_block("diamond_chest"),
-            Some(ChestTier::Obsidian)
-        );
+        // Diamond -> Netherite
         assert_eq!(
             UpgradeItem::Netherite.target_tier_from_block("diamond_chest"),
-            Some(ChestTier::Netherite)
-        );
-        // Obsidian -> Netherite
-        assert_eq!(
-            UpgradeItem::Netherite.target_tier_from_block("obsidian_chest"),
             Some(ChestTier::Netherite)
         );
 
