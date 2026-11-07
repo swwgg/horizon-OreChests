@@ -8,8 +8,6 @@ use std::{
 };
 
 pub const ID: &str = "orechests";
-pub const NAME: &str = "Ore Chests";
-pub const VERSION: &str = "1.0.0";
 
 // ============================================================================
 // Registration Hooks
@@ -66,7 +64,7 @@ pub fn on_screen(block: &str, screen: &mut Option<crate::game::native_hooks::Nat
 // ============================================================================
 
 /// World lifecycle: ensures content and recipes on world open.
-pub fn on_world_lifecycle(phase: crate::game::native_lifecycle::WorldPhase) {
+pub(super) fn on_world_lifecycle(phase: crate::game::native_lifecycle::WorldPhase) {
     use crate::game::native_lifecycle::WorldPhase;
     if let WorldPhase::WorldOpenReady = phase {
         if let Some(root) = auto_discover_root() {
@@ -87,6 +85,12 @@ pub const RECIPES: &[(&str, &str)] = &[
     ("netherite_chest.json", "{\n  \"type\": \"minecraft:crafting_shaped\",\n  \"pattern\": [\n    \"NNN\",\n    \"N#N\",\n    \"NNN\"\n  ],\n  \"key\": {\n    \"N\": \"minecraft:netherite_ingot\",\n    \"#\": [\n      \"minecraft:chest\",\n      \"minecraft:trapped_chest\",\n      \"minecraft:barrel\"\n    ]\n  },\n  \"result\": {\n    \"id\": \"orechests:netherite_chest\",\n    \"count\": 1\n  }\n}\n"),
 ];
 
+pub const CUSTOM_MENUS: &[&str] = &[
+    "orechests:gold_chest",
+    "orechests:diamond_chest",
+    "orechests:netherite_chest",
+];
+
 fn write_if_changed(path: &Path, content: &[u8]) {
     let needs_write = fs::read(path).map_or(true, |existing| existing != content);
     if needs_write {
@@ -94,7 +98,54 @@ fn write_if_changed(path: &Path, content: &[u8]) {
     }
 }
 
+/// Ensures custom chest menu IDs are registered in `registries.json` under `minecraft:menu`
+/// so both server (`ServerData::load`) and client (`remote.rs`) resolve the same protocol IDs.
+fn patch_registries_json(reg_path: &Path) {
+    let Ok(bytes) = fs::read(reg_path) else {
+        return;
+    };
+    let Ok(mut doc) = serde_json::from_slice::<serde_json::Value>(&bytes) else {
+        return;
+    };
+    let Some(entries) = doc
+        .get_mut("minecraft:menu")
+        .and_then(|m| m.get_mut("entries"))
+        .and_then(|e| e.as_object_mut())
+    else {
+        return;
+    };
+
+    if CUSTOM_MENUS.iter().all(|m| entries.contains_key(*m)) {
+        return;
+    }
+
+    let mut next_id = entries
+        .values()
+        .filter_map(|v| v.get("protocol_id").and_then(|id| id.as_u64()))
+        .max()
+        .map_or(0, |max| max + 1);
+
+    for &menu in CUSTOM_MENUS {
+        if !entries.contains_key(menu) {
+            entries.insert(
+                menu.to_owned(),
+                serde_json::json!({ "protocol_id": next_id }),
+            );
+            next_id += 1;
+        }
+    }
+
+    if let Ok(out) = serde_json::to_vec(&doc) {
+        let _ = fs::write(reg_path, out);
+    }
+}
+
 pub fn ensure_content_and_recipes(root: &Path) {
+    patch_registries_json(&root.join("registries.json"));
+    if let Ok(here) = std::env::current_dir() {
+        patch_registries_json(&here.join(".horizon-cache/mod-content/registries.json"));
+    }
+
     let mc_recipe_dir = root.join("data/minecraft/recipe");
     let ore_recipe_dir = root.join("data/orechests/recipe");
     let _ = fs::create_dir_all(&mc_recipe_dir);

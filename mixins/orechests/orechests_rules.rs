@@ -14,6 +14,7 @@ pub enum ChestTier {
     Netherite,
 }
 
+#[allow(dead_code)]
 impl ChestTier {
     pub const ALL: [ChestTier; 5] = [
         ChestTier::Copper,
